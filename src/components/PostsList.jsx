@@ -2,8 +2,9 @@ import { useState } from "react";
 import Post from "./Post";
 import classes from "./PostsList.module.css";
 import NewPost from "./NewPost";
+import Modal from "./Modal";
 
-function PostsList(props) {
+function PostsList({ isPosting, onStopPosting }) {
   const [enteredBody, setBody] = useState("");
   const [enteredAuthor, setAuthor] = useState("");
 
@@ -17,10 +18,15 @@ function PostsList(props) {
 
   return (
     <>
-      <NewPost
-        onBodyChange={changeBodyHandler}
-        onAuthorChange={changeAuthorHandler}
-      />
+      {isPosting && (
+        <Modal onClose={onStopPosting}>
+          <NewPost
+            onBodyChange={changeBodyHandler}
+            onAuthorChange={changeAuthorHandler}
+          />
+        </Modal>
+      )}
+
       <ul className={classes.posts}>
         <Post theme={enteredBody} author={enteredAuthor} />
         <Post theme="Engineering is awesome" author="Ray" />
