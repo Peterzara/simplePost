@@ -1,22 +1,9 @@
-import { useState, useEffect } from "react";
+import { useLoaderData } from "react-router-dom";
 import Post from "./Post";
 import classes from "./PostsList.module.css";
 
 function PostsList() {
-  const [posts, setPosts] = useState([]);
-  const [isloadingPost, setLoadingPost] = useState(false);
-
-  useEffect(() => {
-    async function fetchPosts() {
-      setLoadingPost(true);
-      const response = await fetch("http://localhost:8080/posts");
-      const resData = await response.json();
-      setPosts(resData.posts);
-      setLoadingPost(false);
-    }
-
-    fetchPosts();
-  }, []);
+  const posts = useLoaderData();
 
   function addPostHandler(newPost) {
     fetch("http://localhost:8080/posts", {
@@ -31,7 +18,7 @@ function PostsList() {
 
   return (
     <>
-      {!isloadingPost && posts.length > 0 && (
+      {posts.length > 0 && (
         <ul className={classes.posts}>
           {posts.map((post) => {
             return (
@@ -40,14 +27,9 @@ function PostsList() {
           })}
         </ul>
       )}
-      {!isloadingPost && posts.length === 0 && (
+      {posts.length === 0 && (
         <div style={{ textAlign: "center", color: "white" }}>
           <h2>There is no posts yet</h2>
-        </div>
-      )}
-      {isloadingPost && (
-        <div style={{ textAlign: "center", color: "white" }}>
-          <p>Loading Posts</p>
         </div>
       )}
     </>
