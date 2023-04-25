@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import Post from "./Post";
 import classes from "./PostsList.module.css";
-import NewPost from "./NewPost";
-import Modal from "./Modal";
 
-function PostsList({ isPosting, onStopPosting }) {
+function PostsList() {
   const [posts, setPosts] = useState([]);
+  const [isloadingPost, setLoadingPost] = useState(false);
 
   useEffect(() => {
     async function fetchPosts() {
+      setLoadingPost(true);
       const response = await fetch("http://localhost:8080/posts");
       const resData = await response.json();
       setPosts(resData.posts);
+      setLoadingPost(false);
     }
 
     fetchPosts();
@@ -30,13 +31,7 @@ function PostsList({ isPosting, onStopPosting }) {
 
   return (
     <>
-      {isPosting && (
-        <Modal onClose={onStopPosting}>
-          <NewPost onCancel={onStopPosting} onAddNewPost={addPostHandler} />
-        </Modal>
-      )}
-
-      {posts.length > 0 && (
+      {!isloadingPost && posts.length > 0 && (
         <ul className={classes.posts}>
           {posts.map((post) => {
             return (
@@ -45,9 +40,14 @@ function PostsList({ isPosting, onStopPosting }) {
           })}
         </ul>
       )}
-      {posts.length === 0 && (
+      {!isloadingPost && posts.length === 0 && (
         <div style={{ textAlign: "center", color: "white" }}>
           <h2>There is no posts yet</h2>
+        </div>
+      )}
+      {isloadingPost && (
+        <div style={{ textAlign: "center", color: "white" }}>
+          <p>Loading Posts</p>
         </div>
       )}
     </>
