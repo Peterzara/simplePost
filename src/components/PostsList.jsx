@@ -22,7 +22,12 @@ function PostsList() {
         <ul className={classes.posts}>
           {posts.map((post) => {
             return (
-              <Post key={post.body} theme={post.body} author={post.author} />
+              <Post
+                key={post.body}
+                id={post.id}
+                theme={post.body}
+                author={post.author}
+              />
             );
           })}
         </ul>
